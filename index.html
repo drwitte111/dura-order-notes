@@ -30,14 +30,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     padding: 2rem 1rem;
   }
 
   header {
     width: 100%;
-    max-width: 540px;
-    margin-bottom: 2rem;
+    max-width: 900px;
+    margin-bottom: 1.5rem;
   }
 
   .eyebrow {
@@ -56,11 +55,40 @@
     color: var(--text);
   }
 
-  h1 span {
-    color: var(--muted);
-    font-weight: 400;
+  h1 span { color: var(--muted); font-weight: 400; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0.25rem;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
   }
 
+  .tab-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 0.6rem 1.25rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-panel { display: none; width: 100%; max-width: 900px; }
+  .tab-panel.active { display: block; }
+
+  /* Card */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -68,8 +96,10 @@
     padding: 2rem;
     width: 100%;
     max-width: 540px;
+    margin: 0 auto;
   }
 
+  /* Config */
   .config-bar {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -121,10 +151,10 @@
   }
 
   .config-toggle:hover { color: var(--accent); }
-
   .config-fields { display: none; }
   .config-fields.open { display: flex; flex-direction: column; gap: 0.75rem; }
 
+  /* Form fields */
   .row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -230,14 +260,159 @@
   #status.success { color: var(--success); }
   #status.error   { color: var(--error); }
 
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 1.5rem 0;
+  /* Viewer */
+  .viewer-toolbar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
   }
+
+  .viewer-toolbar input[type="text"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.75rem;
+    outline: none;
+    flex: 1;
+    min-width: 160px;
+    transition: border-color 0.2s;
+  }
+
+  .viewer-toolbar input[type="text"]:focus { border-color: var(--accent); }
+
+  .viewer-toolbar select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.75rem;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+
+  .btn-refresh {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-refresh:hover { opacity: 0.85; }
+  .btn-refresh:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .viewer-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  thead th {
+    background: var(--surface);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--label);
+    padding: 0.65rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  thead th:hover { color: var(--accent); }
+  thead th.sort-asc::after  { content: ' ↑'; color: var(--accent); }
+  thead th.sort-desc::after { content: ' ↓'; color: var(--accent); }
+
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface); }
+
+  tbody td {
+    padding: 0.6rem 0.9rem;
+    color: var(--text);
+    vertical-align: top;
+    line-height: 1.4;
+  }
+
+  tbody td:nth-child(1) {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  tbody td:nth-child(2),
+  tbody td:nth-child(4) {
+    white-space: nowrap;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .badge-PO { background: #1e3a6e; color: #7eb3ff; }
+  .badge-SO { background: #1e4a2e; color: #5ecc7b; }
+  .badge-delay { background: #4a1e1e; color: #f87171; }
+  .badge-note  { background: #2a2a1e; color: #facc15; }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+  }
+
+  #viewerStatus {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 1rem;
+  }
+
+  #viewerStatus.error { color: var(--error); }
 
   @media (max-width: 480px) {
     .row { grid-template-columns: 1fr; }
+    .card { padding: 1.25rem; }
   }
 </style>
 </head>
@@ -248,69 +423,133 @@
   <h1>Order Notes <span>/ Log</span></h1>
 </header>
 
-<div class="card">
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('entry')">Add Note</button>
+  <button class="tab-btn" onclick="switchTab('viewer')">View Notes</button>
+</div>
 
-  <!-- Config Section -->
-  <div class="config-bar">
-    <button class="config-toggle" onclick="toggleConfig()" id="configToggle">⚙ Settings (token &amp; repo)</button>
-    <div class="config-fields" id="configFields">
-      <div>
-        <label>GitHub Token</label>
-        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
-      </div>
-      <div>
-        <label>GitHub Username</label>
-        <input type="text" id="ghUser" placeholder="drwitte111" value="drwitte111" />
-      </div>
-      <div>
-        <label>Repo Name</label>
-        <input type="text" id="ghRepo" placeholder="dura-order-notes" value="dura-order-notes" />
-      </div>
-      <div>
-        <label>CSV File Path (in repo)</label>
-        <input type="text" id="ghFile" placeholder="notes.csv" value="notes.csv" />
+<!-- Entry Tab -->
+<div class="tab-panel active" id="tab-entry">
+  <div class="card">
+    <div class="config-bar">
+      <button class="config-toggle" onclick="toggleConfig()" id="configToggle">⚙ Settings (token &amp; repo)</button>
+      <div class="config-fields" id="configFields">
+        <div>
+          <label>GitHub Token</label>
+          <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
+        </div>
+        <div>
+          <label>GitHub Username</label>
+          <input type="text" id="ghUser" value="drwitte111" />
+        </div>
+        <div>
+          <label>Repo Name</label>
+          <input type="text" id="ghRepo" value="dura-order-notes" />
+        </div>
+        <div>
+          <label>CSV File Path</label>
+          <input type="text" id="ghFile" value="notes.csv" />
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Form -->
-  <div class="row">
-    <div class="field">
-      <label for="orderType">Order Type</label>
+    <div class="row">
+      <div class="field">
+        <label for="orderType">Order Type</label>
+        <div class="select-wrap">
+          <select id="orderType">
+            <option value="PO">PO</option>
+            <option value="SO">SO</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="orderNo">Order No</label>
+        <input type="text" id="orderNo" placeholder="e.g. 100432" />
+      </div>
+    </div>
+
+    <div class="field full">
+      <label for="noteType">Note Type</label>
       <div class="select-wrap">
-        <select id="orderType">
-          <option value="PO">PO</option>
-          <option value="SO">SO</option>
+        <select id="noteType">
+          <option value="Customer Note">Customer Note</option>
+          <option value="Delay">Delay</option>
         </select>
       </div>
     </div>
-    <div class="field">
-      <label for="orderNo">Order No</label>
-      <input type="text" id="orderNo" placeholder="e.g. 100432" />
+
+    <div class="field full">
+      <label for="note">Note</label>
+      <textarea id="note" placeholder="Enter note details here..."></textarea>
     </div>
+
+    <button type="submit" id="submitBtn" onclick="submitNote()">Save Note</button>
+    <div id="status"></div>
+  </div>
+</div>
+
+<!-- Viewer Tab -->
+<div class="tab-panel" id="tab-viewer">
+  <div class="viewer-toolbar">
+    <input type="text" id="searchBox" placeholder="Search order no, note..." oninput="renderTable()" />
+    <select id="filterType" onchange="renderTable()">
+      <option value="">All Types</option>
+      <option value="PO">PO</option>
+      <option value="SO">SO</option>
+    </select>
+    <select id="filterNoteType" onchange="renderTable()">
+      <option value="">All Note Types</option>
+      <option value="Customer Note">Customer Note</option>
+      <option value="Delay">Delay</option>
+    </select>
+    <button class="btn-refresh" id="refreshBtn" onclick="loadNotes()">↻ Refresh</button>
   </div>
 
-  <div class="field full">
-    <label for="noteType">Note Type</label>
-    <div class="select-wrap">
-      <select id="noteType">
-        <option value="Customer Note">Customer Note</option>
-        <option value="Delay">Delay</option>
-      </select>
-    </div>
+  <div class="viewer-meta" id="viewerMeta"></div>
+
+  <div id="viewerStatus"></div>
+
+  <div class="table-wrap" id="tableWrap" style="display:none;">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy(0)">Timestamp</th>
+          <th onclick="sortBy(1)">Type</th>
+          <th onclick="sortBy(2)">Order No</th>
+          <th onclick="sortBy(3)">Note Type</th>
+          <th onclick="sortBy(4)">Note</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
   </div>
 
-  <div class="field full">
-    <label for="note">Note</label>
-    <textarea id="note" placeholder="Enter note details here..."></textarea>
-  </div>
-
-  <button type="submit" id="submitBtn" onclick="submitNote()">Save Note</button>
-  <div id="status"></div>
-
+  <div class="empty-state" id="emptyState" style="display:none;">No notes match your filters.</div>
 </div>
 
 <script>
+  // ── Config ──────────────────────────────────────────────
+  const OWNER = 'drwitte111';
+  const REPO  = 'dura-order-notes';
+  const FILE  = 'notes.csv';
+
+  let allRows = [];
+  let sortCol = 0;
+  let sortDir = -1; // -1 = desc (newest first)
+
+  // ── Tab switching ────────────────────────────────────────
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', (i === 0 && name === 'entry') || (i === 1 && name === 'viewer'));
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    if (name === 'viewer' && allRows.length === 0) loadNotes();
+  }
+
+  // ── Config toggle ────────────────────────────────────────
   function toggleConfig() {
     const fields = document.getElementById('configFields');
     const toggle = document.getElementById('configToggle');
@@ -320,7 +559,6 @@
       : '⚙ Settings (token & repo)';
   }
 
-  // Auto-open config if token not set
   window.addEventListener('load', () => {
     const saved = localStorage.getItem('gh_token');
     if (saved) {
@@ -330,6 +568,7 @@
     }
   });
 
+  // ── CSV escape ───────────────────────────────────────────
   function escapeCSV(val) {
     if (val == null) return '';
     val = String(val);
@@ -339,6 +578,144 @@
     return val;
   }
 
+  // ── Parse CSV ────────────────────────────────────────────
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    if (lines.length < 2) return [];
+    return lines.slice(1).map(line => {
+      const cols = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"') {
+          if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+          else inQ = !inQ;
+        } else if (c === ',' && !inQ) {
+          cols.push(cur); cur = '';
+        } else {
+          cur += c;
+        }
+      }
+      cols.push(cur);
+      return cols;
+    });
+  }
+
+  // ── Load notes from GitHub API (bypasses cache) ──────────
+  async function loadNotes() {
+    const btn = document.getElementById('refreshBtn');
+    const statusEl = document.getElementById('viewerStatus');
+    const token = localStorage.getItem('gh_token') || document.getElementById('ghToken')?.value?.trim() || '';
+
+    btn.disabled = true;
+    statusEl.className = '';
+    statusEl.textContent = 'Loading...';
+    document.getElementById('tableWrap').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'none';
+
+    const headers = {
+      'Accept': 'application/vnd.github+json',
+      ...(token && { 'Authorization': `token ${token}` })
+    };
+
+    try {
+      // GitHub API returns base64 content — always fresh, no browser cache
+      const res = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}?t=${Date.now()}`,
+        { headers, cache: 'no-store' }
+      );
+
+      if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+
+      const data = await res.json();
+      const text = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+
+      allRows = parseCSV(text);
+      sortCol = 0;
+      sortDir = -1;
+      updateSortHeaders();
+      renderTable();
+
+      const now = new Date().toLocaleTimeString();
+      document.getElementById('viewerMeta').textContent = `${allRows.length} record${allRows.length !== 1 ? 's' : ''} · last refreshed ${now}`;
+      statusEl.textContent = '';
+
+    } catch (err) {
+      statusEl.className = 'error';
+      statusEl.textContent = `✗ ${err.message}`;
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // ── Render table with filters ────────────────────────────
+  function renderTable() {
+    const search   = document.getElementById('searchBox').value.toLowerCase();
+    const typeF    = document.getElementById('filterType').value;
+    const noteTypeF = document.getElementById('filterNoteType').value;
+
+    let filtered = allRows.filter(r => {
+      if (typeF     && r[1] !== typeF)     return false;
+      if (noteTypeF && r[3] !== noteTypeF) return false;
+      if (search && !r.join(' ').toLowerCase().includes(search)) return false;
+      return true;
+    });
+
+    // Sort
+    filtered.sort((a, b) => {
+      const av = (a[sortCol] || '').toLowerCase();
+      const bv = (b[sortCol] || '').toLowerCase();
+      return av < bv ? sortDir : av > bv ? -sortDir : 0;
+    });
+
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+
+    if (filtered.length === 0) {
+      document.getElementById('tableWrap').style.display = 'none';
+      document.getElementById('emptyState').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('tableWrap').style.display = 'block';
+    document.getElementById('emptyState').style.display = 'none';
+
+    filtered.forEach(r => {
+      const tr = document.createElement('tr');
+      const orderType = (r[1] || '').trim();
+      const noteType  = (r[3] || '').trim();
+      const typeBadge = `<span class="badge badge-${orderType}">${orderType}</span>`;
+      const ntBadge   = noteType === 'Delay'
+        ? `<span class="badge badge-delay">Delay</span>`
+        : `<span class="badge badge-note">Customer Note</span>`;
+
+      tr.innerHTML = `
+        <td>${r[0] || ''}</td>
+        <td>${typeBadge}</td>
+        <td>${r[2] || ''}</td>
+        <td>${ntBadge}</td>
+        <td>${(r[4] || '').replace(/\n/g, '<br>')}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── Sorting ──────────────────────────────────────────────
+  function sortBy(col) {
+    if (sortCol === col) sortDir *= -1;
+    else { sortCol = col; sortDir = 1; }
+    updateSortHeaders();
+    renderTable();
+  }
+
+  function updateSortHeaders() {
+    document.querySelectorAll('thead th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === sortCol) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    });
+  }
+
+  // ── Submit note ──────────────────────────────────────────
   async function submitNote() {
     const token    = document.getElementById('ghToken').value.trim();
     const user     = document.getElementById('ghUser').value.trim();
@@ -349,23 +726,19 @@
     const noteType  = document.getElementById('noteType').value;
     const note      = document.getElementById('note').value.trim();
 
-    const status = document.getElementById('status');
-    const btn    = document.getElementById('submitBtn');
+    const btn = document.getElementById('submitBtn');
 
-    // Save token locally for convenience
     if (token) localStorage.setItem('gh_token', token);
 
-    // Validation
-    if (!token)    { setStatus('error', 'Enter your GitHub token in Settings.'); return; }
-    if (!orderNo)  { setStatus('error', 'Order No is required.'); return; }
-    if (!note)     { setStatus('error', 'Note is required.'); return; }
+    if (!token)   { setStatus('error', 'Enter your GitHub token in Settings.'); return; }
+    if (!orderNo) { setStatus('error', 'Order No is required.'); return; }
+    if (!note)    { setStatus('error', 'Note is required.'); return; }
 
     btn.disabled = true;
     setStatus('', 'Saving...');
 
     const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
-    const newRow = [timestamp, orderType, orderNo, noteType, note]
-      .map(escapeCSV).join(',') + '\n';
+    const newRow = [timestamp, orderType, orderNo, noteType, note].map(escapeCSV).join(',') + '\n';
 
     const apiBase = `https://api.github.com/repos/${user}/${repo}/contents/${filePath}`;
     const headers = {
@@ -375,18 +748,14 @@
     };
 
     try {
-      // Get current file (if exists)
-      let sha = null;
-      let existingContent = '';
-
-      const getRes = await fetch(apiBase, { headers });
+      let sha = null, existingContent = '';
+      const getRes = await fetch(apiBase, { headers, cache: 'no-store' });
 
       if (getRes.ok) {
         const getData = await getRes.json();
         sha = getData.sha;
-        existingContent = atob(getData.content.replace(/\n/g, ''));
+        existingContent = decodeURIComponent(escape(atob(getData.content.replace(/\n/g, ''))));
       } else if (getRes.status === 404) {
-        // File doesn't exist yet — create with header row
         existingContent = 'Timestamp,Order Type,Order No,Note Type,Note\n';
       } else {
         throw new Error(`GitHub API error: ${getRes.status}`);
@@ -395,16 +764,10 @@
       const updatedContent = existingContent + newRow;
       const encoded = btoa(unescape(encodeURIComponent(updatedContent)));
 
-      const body = {
-        message: `Add note: ${orderType} ${orderNo}`,
-        content: encoded,
-        ...(sha && { sha })
-      };
-
       const putRes = await fetch(apiBase, {
         method: 'PUT',
         headers,
-        body: JSON.stringify(body)
+        body: JSON.stringify({ message: `Add note: ${orderType} ${orderNo}`, content: encoded, ...(sha && { sha }) })
       });
 
       if (!putRes.ok) {
@@ -415,6 +778,7 @@
       setStatus('success', `✓ Note saved — ${orderType} ${orderNo} at ${timestamp}`);
       document.getElementById('orderNo').value = '';
       document.getElementById('note').value = '';
+      allRows = []; // force viewer to reload fresh next visit
 
     } catch (err) {
       setStatus('error', `✗ ${err.message}`);
