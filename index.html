@@ -492,6 +492,23 @@
 
 <!-- Viewer Tab -->
 <div class="tab-panel" id="tab-viewer">
+
+  <!-- Token gate -->
+  <div id="viewerGate" style="display:none;">
+    <div class="card" style="max-width:420px;margin:0 auto;">
+      <div class="eyebrow" style="margin-bottom:0.5rem;">Access Required</div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.5;">Enter your GitHub token to view notes. It will be saved in your browser for next time.</p>
+      <div class="field full" style="margin-bottom:1rem;">
+        <label for="viewerToken">GitHub Token</label>
+        <input type="password" id="viewerToken" placeholder="ghp_xxxxxxxxxxxx" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.85rem;padding:0.55rem 0.75rem;outline:none;width:100%;" />
+      </div>
+      <button class="btn-refresh" style="width:100%;padding:0.65rem;" onclick="submitViewerToken()">Access Notes</button>
+      <div id="gateError" style="color:var(--error);font-family:'IBM Plex Mono',monospace;font-size:0.72rem;margin-top:0.75rem;text-align:center;"></div>
+    </div>
+  </div>
+
+  <!-- Main viewer (hidden until token validated) -->
+  <div id="viewerMain" style="display:none;">
   <div class="viewer-toolbar">
     <input type="text" id="searchBox" placeholder="Search order no, note..." oninput="renderTable()" />
     <select id="filterType" onchange="renderTable()">
@@ -528,6 +545,7 @@
   </div>
 
   <div class="empty-state" id="emptyState" style="display:none;">No notes match your filters.</div>
+  </div><!-- end viewerMain -->
 </div>
 
 <script>
@@ -547,7 +565,31 @@
     });
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
-    if (name === 'viewer' && allRows.length === 0) loadNotes();
+
+    if (name === 'viewer') {
+      const token = localStorage.getItem('gh_token') || document.getElementById('ghToken').value.trim();
+      if (token) {
+        // Token already known — go straight to viewer
+        document.getElementById('viewerGate').style.display = 'none';
+        document.getElementById('viewerMain').style.display = 'block';
+        if (allRows.length === 0) loadNotes();
+      } else {
+        // No token — show gate
+        document.getElementById('viewerGate').style.display = 'block';
+        document.getElementById('viewerMain').style.display = 'none';
+      }
+    }
+  }
+
+  function submitViewerToken() {
+    const val = document.getElementById('viewerToken').value.trim();
+    if (!val) { document.getElementById('gateError').textContent = 'Token is required.'; return; }
+    localStorage.setItem('gh_token', val);
+    document.getElementById('ghToken').value = val;
+    document.getElementById('gateError').textContent = '';
+    document.getElementById('viewerGate').style.display = 'none';
+    document.getElementById('viewerMain').style.display = 'block';
+    loadNotes();
   }
 
   // ── Config toggle ────────────────────────────────────────
