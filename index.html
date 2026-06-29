@@ -505,6 +505,7 @@
       <option value="Delay">Delay</option>
     </select>
     <button class="btn-refresh" id="refreshBtn" onclick="loadNotes()">↻ Refresh</button>
+    <button class="btn-refresh" id="exportBtn" onclick="exportCSV()" style="background:var(--surface);border:1px solid var(--border);color:var(--text);">⬇ Export CSV</button>
   </div>
 
   <div class="viewer-meta" id="viewerMeta"></div>
@@ -791,6 +792,32 @@
     const el = document.getElementById('status');
     el.className = type;
     el.textContent = msg;
+  }
+
+  function exportCSV() {
+    if (allRows.length === 0) { alert('No data loaded. Click Refresh first.'); return; }
+
+    const search    = document.getElementById('searchBox').value.toLowerCase();
+    const typeF     = document.getElementById('filterType').value;
+    const noteTypeF = document.getElementById('filterNoteType').value;
+
+    const filtered = allRows.filter(r => {
+      if (typeF     && r[1] !== typeF)     return false;
+      if (noteTypeF && r[3] !== noteTypeF) return false;
+      if (search && !r.join(' ').toLowerCase().includes(search)) return false;
+      return true;
+    });
+
+    const header = 'Timestamp,Order Type,Order No,Note Type,Note\n';
+    const rows = filtered.map(r => r.map(v => escapeCSV(v)).join(',')).join('\n');
+    const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    const date = new Date().toISOString().substring(0, 10);
+    a.href = url;
+    a.download = `order-notes-${date}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 </script>
 
