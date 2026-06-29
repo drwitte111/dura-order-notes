@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dura Order Notes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f1117;
+    --surface:   #1a1d27;
+    --border:    #2e3147;
+    --accent:    #4f8ef7;
+    --accent-dim:#1e3a6e;
+    --text:      #e8eaf0;
+    --muted:     #6b7280;
+    --success:   #22c55e;
+    --error:     #ef4444;
+    --label:     #9ca3af;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  header {
+    width: 100%;
+    max-width: 540px;
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  h1 span {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 540px;
+  }
+
+  .config-bar {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .config-bar label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .config-bar input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    padding: 0.3rem 0;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .config-bar input:focus { border-bottom-color: var(--accent); }
+
+  .config-toggle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .config-toggle:hover { color: var(--accent); }
+
+  .config-fields { display: none; }
+  .config-fields.open { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field.full { margin-bottom: 1.25rem; }
+
+  .field label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--label);
+    text-transform: uppercase;
+  }
+
+  .field select,
+  .field input[type="text"] {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.55rem 0.75rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+    font-size: 0.8rem;
+  }
+
+  .field select:focus,
+  .field input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
+  .field textarea {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.65rem 0.75rem;
+    outline: none;
+    resize: vertical;
+    width: 100%;
+    min-height: 140px;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+
+  .field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-top: 0.5rem;
+    letter-spacing: 0.01em;
+  }
+
+  button[type="submit"]:hover { opacity: 0.88; }
+  button[type="submit"]:active { transform: scale(0.99); }
+  button[type="submit"]:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  #status {
+    margin-top: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    text-align: center;
+    min-height: 1.2em;
+    transition: color 0.2s;
+  }
+
+  #status.success { color: var(--success); }
+  #status.error   { color: var(--error); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+
+  @media (max-width: 480px) {
+    .row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Dura Chemical</div>
+  <h1>Order Notes <span>/ Log</span></h1>
+</header>
+
+<div class="card">
+
+  <!-- Config Section -->
+  <div class="config-bar">
+    <button class="config-toggle" onclick="toggleConfig()" id="configToggle">⚙ Settings (token &amp; repo)</button>
+    <div class="config-fields" id="configFields">
+      <div>
+        <label>GitHub Token</label>
+        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" />
+      </div>
+      <div>
+        <label>GitHub Username</label>
+        <input type="text" id="ghUser" placeholder="drwitte111" value="drwitte111" />
+      </div>
+      <div>
+        <label>Repo Name</label>
+        <input type="text" id="ghRepo" placeholder="dura-order-notes" value="dura-order-notes" />
+      </div>
+      <div>
+        <label>CSV File Path (in repo)</label>
+        <input type="text" id="ghFile" placeholder="notes.csv" value="notes.csv" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="row">
+    <div class="field">
+      <label for="orderType">Order Type</label>
+      <div class="select-wrap">
+        <select id="orderType">
+          <option value="PO">PO</option>
+          <option value="SO">SO</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="orderNo">Order No</label>
+      <input type="text" id="orderNo" placeholder="e.g. 100432" />
+    </div>
+  </div>
+
+  <div class="field full">
+    <label for="noteType">Note Type</label>
+    <div class="select-wrap">
+      <select id="noteType">
+        <option value="Customer Note">Customer Note</option>
+        <option value="Delay">Delay</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field full">
+    <label for="note">Note</label>
+    <textarea id="note" placeholder="Enter note details here..."></textarea>
+  </div>
+
+  <button type="submit" id="submitBtn" onclick="submitNote()">Save Note</button>
+  <div id="status"></div>
+
+</div>
+
+<script>
+  function toggleConfig() {
+    const fields = document.getElementById('configFields');
+    const toggle = document.getElementById('configToggle');
+    fields.classList.toggle('open');
+    toggle.textContent = fields.classList.contains('open')
+      ? '⚙ Settings (click to collapse)'
+      : '⚙ Settings (token & repo)';
+  }
+
+  // Auto-open config if token not set
+  window.addEventListener('load', () => {
+    const saved = localStorage.getItem('gh_token');
+    if (saved) {
+      document.getElementById('ghToken').value = saved;
+    } else {
+      toggleConfig();
+    }
+  });
+
+  function escapeCSV(val) {
+    if (val == null) return '';
+    val = String(val);
+    if (val.includes('"') || val.includes(',') || val.includes('\n')) {
+      return '"' + val.replace(/"/g, '""') + '"';
+    }
+    return val;
+  }
+
+  async function submitNote() {
+    const token    = document.getElementById('ghToken').value.trim();
+    const user     = document.getElementById('ghUser').value.trim();
+    const repo     = document.getElementById('ghRepo').value.trim();
+    const filePath = document.getElementById('ghFile').value.trim();
+    const orderType = document.getElementById('orderType').value;
+    const orderNo   = document.getElementById('orderNo').value.trim();
+    const noteType  = document.getElementById('noteType').value;
+    const note      = document.getElementById('note').value.trim();
+
+    const status = document.getElementById('status');
+    const btn    = document.getElementById('submitBtn');
+
+    // Save token locally for convenience
+    if (token) localStorage.setItem('gh_token', token);
+
+    // Validation
+    if (!token)    { setStatus('error', 'Enter your GitHub token in Settings.'); return; }
+    if (!orderNo)  { setStatus('error', 'Order No is required.'); return; }
+    if (!note)     { setStatus('error', 'Note is required.'); return; }
+
+    btn.disabled = true;
+    setStatus('', 'Saving...');
+
+    const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
+    const newRow = [timestamp, orderType, orderNo, noteType, note]
+      .map(escapeCSV).join(',') + '\n';
+
+    const apiBase = `https://api.github.com/repos/${user}/${repo}/contents/${filePath}`;
+    const headers = {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json'
+    };
+
+    try {
+      // Get current file (if exists)
+      let sha = null;
+      let existingContent = '';
+
+      const getRes = await fetch(apiBase, { headers });
+
+      if (getRes.ok) {
+        const getData = await getRes.json();
+        sha = getData.sha;
+        existingContent = atob(getData.content.replace(/\n/g, ''));
+      } else if (getRes.status === 404) {
+        // File doesn't exist yet — create with header row
+        existingContent = 'Timestamp,Order Type,Order No,Note Type,Note\n';
+      } else {
+        throw new Error(`GitHub API error: ${getRes.status}`);
+      }
+
+      const updatedContent = existingContent + newRow;
+      const encoded = btoa(unescape(encodeURIComponent(updatedContent)));
+
+      const body = {
+        message: `Add note: ${orderType} ${orderNo}`,
+        content: encoded,
+        ...(sha && { sha })
+      };
+
+      const putRes = await fetch(apiBase, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(body)
+      });
+
+      if (!putRes.ok) {
+        const errData = await putRes.json();
+        throw new Error(errData.message || `PUT failed: ${putRes.status}`);
+      }
+
+      setStatus('success', `✓ Note saved — ${orderType} ${orderNo} at ${timestamp}`);
+      document.getElementById('orderNo').value = '';
+      document.getElementById('note').value = '';
+
+    } catch (err) {
+      setStatus('error', `✗ ${err.message}`);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function setStatus(type, msg) {
+    const el = document.getElementById('status');
+    el.className = type;
+    el.textContent = msg;
+  }
+</script>
+
+</body>
+</html>
